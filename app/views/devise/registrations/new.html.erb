@@ -9,6 +9,11 @@
   </div>
 
   <div class="field">
+    <%= f.label :nickname, "キャラクターの名前" %><br />
+    <%= f.text_field :nickname, autofocus: true %>
+  </div>
+
+  <div class="field">
     <p><%= f.label :email %></p>
     <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
   </div>

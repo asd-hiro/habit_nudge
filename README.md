@@ -5,10 +5,12 @@
 | Column   | Type   | Options                   |
 | -------- | ------ | ------------------------- |
 | name     | string | null: false               |
+| nickname | string | null: false               |
 | email    | string | null: false, unique: true |
 | password | string | null: false               |
 
 #### Association
+
 - has_one :character
 - has_many :routines
 - has_many :study_logs
@@ -27,6 +29,7 @@
 | user   | references | null: false, foreign_key: true |
 
 #### Association
+
 - belongs_to :user
 
 ---
@@ -39,6 +42,7 @@
 | user    | references | null: false, foreign_key: true |
 
 #### Association
+
 - belongs_to :user
 - has_many :study_logs
 
@@ -58,6 +62,7 @@
 | routine           | references | null: false, foreign_key: true |
 
 #### Association
+
 - belongs_to :user
 - belongs_to :routine
 
@@ -71,4 +76,5 @@
 | user      | references | null: false, foreign_key: true |
 
 #### Association
+
 - belongs_to :user
