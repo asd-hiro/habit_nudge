@@ -1,0 +1,15 @@
+<h1>新しい学習ルーティンを決める</h1>
+<p>キャラクターを育てるために、毎日続ける学習内容を入力してください。</p>
+
+<%= form_with model: @routine, local: true do |f| %>
+  <div class="field">
+    <%= f.label :content, "学習内容（例：Railsの教材を3章進める）" %><br />
+    <%= f.text_area :content, placeholder: "ここに入力...", rows: 5 %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "ルーティンを登録する" %>
+  </div>
+<% end %>
+
+<%= link_to "戻る", root_path %>

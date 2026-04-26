@@ -8,6 +8,7 @@ class User < ApplicationRecord
   validates :nickname, presence: true
 
   has_one :character, dependent: :destroy
+  has_many :routines, dependent: :destroy
 
   after_create :create_default_character
 
