@@ -73,3 +73,4 @@ end
 
 gem "devise", "~> 5.0"
 gem 'enum_help'
+gem 'devise-i18n'
