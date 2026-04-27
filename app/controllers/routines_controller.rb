@@ -33,12 +33,19 @@ class RoutinesController < ApplicationController
   end
 
   def update_status
-    # ステータスを 'done' に更新
-    if @routine.done!
-      redirect_to root_path, notice: 'ルーティンを達成しました！お疲れ様です！'
-    else
-      redirect_to root_path, alert: 'ステータスの更新に失敗しました。'
+    # トランザクションを使って、ルーティンの更新とキャラの成長を同時に行う
+    Routine.transaction do
+      @routine.done!
+
+      # ログインユーザーのキャラクターを取得して経験値を加算
+      character = current_user.character
+      character.exp += 10 # 経験値の獲得量はここを調整する
+      character.save!
     end
+
+    redirect_to root_path, notice: 'ルーティン達成！経験値を10獲得しました！'
+  rescue ActiveRecord::RecordInvalid
+    redirect_to root_path, alert: 'エラーが発生しました。'
   end
 
   private
