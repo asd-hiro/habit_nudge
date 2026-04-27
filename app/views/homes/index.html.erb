@@ -1,5 +1,14 @@
 <h1>背徳の育成ゲーム</h1>
 
+<% if current_user.character.present? %>
+  <div class="character-info">
+    <h2><%= current_user.character.name %> (Lv.<%= current_user.character.level %>)</h2>
+    <p>現在の経験値: <%= current_user.character.exp %></p>
+  </div>
+<% else %>
+  <p>キャラクターを準備中です...</p>
+<% end %>
+
 <h2>学習ルーティン一覧</h2>
 
 <%# ルーティン登録画面へのリンク %>

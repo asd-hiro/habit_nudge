@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     # サインアップ時にnameとnicknameカラムを許容する
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :nickname])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :character_name])
   end
 
   def basic_auth
