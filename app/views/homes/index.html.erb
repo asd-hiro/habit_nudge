@@ -9,7 +9,10 @@
 <% if @routines.present? %>
   <ul>
     <% @routines.each do |routine| %>
-      <li><%= routine.content %></li>
+      <li>
+        <%# ルーティンの内容をクリックすると詳細へ飛ぶようにする %>
+        <%= link_to routine.content, routine_path(routine) %>
+      </li>
     <% end %>
   </ul>
 <% else %>

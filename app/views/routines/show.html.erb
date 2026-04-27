@@ -1,0 +1,12 @@
+<h2>学習ルーティンの詳細</h2>
+
+<p><strong>内容:</strong> <%= @routine.content %></p>
+
+<div class="actions">
+  <%= link_to "編集する", edit_routine_path(@routine) %>
+  |
+  <%= button_to "削除する", routine_path(@routine), method: :delete, form: { data: { turbo_confirm: "本当に削除しますか？" } } %>
+</div>
+
+<br>
+<%= link_to "一覧に戻る", root_path %>

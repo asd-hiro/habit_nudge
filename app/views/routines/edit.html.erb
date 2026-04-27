@@ -1,0 +1,11 @@
+<h2>ルーティンを編集する</h2>
+
+<%= form_with model: @routine do |f| %>
+  <div class="field">
+    <%= f.label :content, "学習内容" %><br />
+    <%= f.text_area :content, rows: 5 %>
+  </div>
+  <%= f.submit "更新する" %>
+<% end %>
+
+<%= link_to "戻る", root_path %>
