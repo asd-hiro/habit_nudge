@@ -1,8 +1,14 @@
 <h2>学習ルーティンの詳細</h2>
 
 <p><strong>内容:</strong> <%= @routine.content %></p>
+<p><strong>現在の状態:</strong> <%= @routine.status_i18n %></p> <%# 日本語表示にするにはもう少し設定が必要 %>
 
 <div class="actions">
+  <%# 未完了の場合のみ「達成！」ボタンを表示する %>
+  <% unless @routine.done? %>
+    <%= button_to "このルーティンを達成する！", update_status_routine_path(@routine), method: :patch %>
+  <% end %>
+
   <%= link_to "編集する", edit_routine_path(@routine) %>
   |
   <%= button_to "削除する", routine_path(@routine), method: :delete, form: { data: { turbo_confirm: "本当に削除しますか？" } } %>

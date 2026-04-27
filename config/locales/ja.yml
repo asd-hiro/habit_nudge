@@ -1,0 +1,7 @@
+ja:
+  enums:
+    routine:
+      status:
+        todo: "未着手"
+        doing: "実行中"
+        done: "完了"

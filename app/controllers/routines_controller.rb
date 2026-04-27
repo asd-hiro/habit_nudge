@@ -1,5 +1,5 @@
 class RoutinesController < ApplicationController
-  before_action :set_routine, only: [:show, :edit, :update, :destroy]
+  before_action :set_routine, only: [:show, :edit, :update, :destroy, :update_status]
   def new
     @routine = Routine.new
   end
@@ -30,6 +30,15 @@ class RoutinesController < ApplicationController
   def destroy
     @routine.destroy
     redirect_to root_path, notice: 'ルーティンを削除しました。'
+  end
+
+  def update_status
+    # ステータスを 'done' に更新
+    if @routine.done!
+      redirect_to root_path, notice: 'ルーティンを達成しました！お疲れ様です！'
+    else
+      redirect_to root_path, alert: 'ステータスの更新に失敗しました。'
+    end
   end
 
   private
