@@ -18,21 +18,37 @@
   <div class="routine-list" style="margin-top: 20px;">
     <% @routines.each do |routine| %>
       <div class="routine-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-        
+    
         <div>
-          <%# タスク内容と状態を表示 %>
           <strong><%= link_to routine.content, routine_path(routine) %></strong>
           <span class="status-badge" style="margin-left: 10px; color: <%= routine.done? ? 'green' : 'orange' %>;">
             [<%= routine.status_i18n %>]
           </span>
+      
+          <%# 計測中なら「計測中」と表示する小さなテキストを追加 %>
+          <% current_log = routine.study_logs.find_by(ended_at: nil) %>
+          <% if current_log %>
+            <br><small style="color: #e67e22;">🕒 計測開始: <%= current_log.started_at.strftime("%H:%M") %></small>
+          <% end %>
         </div>
 
-        <%# 未着手なら達成ボタンを表示、完了ならメッセージを表示 %>
-        <% if routine.todo? %>
-          <%= button_to '達成！', update_status_routine_path(routine), method: :patch, data: { turbo_confirm: '達成しますか？' } %>
-        <% else %>
-          <span style="color: gray;">完了済み</span>
-        <% end %>
+        <div class="actions">
+          <% if current_log %>
+            <%# 【計測中】終了ボタンを表示 %>
+            <%= button_to '終了して達成！', update_status_routine_path(routine), 
+                method: :patch, 
+                data: { turbo_confirm: '学習を終了して達成にしますか？' },
+                style: "background-color: #2ecc71; color: white; border: none; padding: 5px 10px; border-radius: 4px;" %>
+          <% elsif routine.todo? %>
+            <%# 【未着手】開始ボタンを表示 %>
+            <%= button_to '学習開始', start_study_routine_path(routine), 
+                method: :post,
+                style: "background-color: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 4px;" %>
+          <% else %>
+            <%# 【完了済み】 %>
+            <span style="color: gray;">完了済み</span>
+          <% end %>
+        </div>
 
       </div>
     <% end %>

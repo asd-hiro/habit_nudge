@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  routine: one
+  started_at: 2026-04-28 21:24:11
+  ended_at: 2026-04-28 21:24:11
+  duration_minutes: 1
+  focus_score: 1
+  comment: MyText
+
+two:
+  routine: two
+  started_at: 2026-04-28 21:24:11
+  ended_at: 2026-04-28 21:24:11
+  duration_minutes: 1
+  focus_score: 1
+  comment: MyText

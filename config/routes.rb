@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   
   resources :routines do
     member do
-      patch :update_status
+      patch :update_status  # 完了処理
+      post :start_study     # 開始処理
     end
   end
 

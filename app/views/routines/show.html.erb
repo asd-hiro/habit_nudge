@@ -1,17 +1,42 @@
 <h2>学習ルーティンの詳細</h2>
 
 <p><strong>内容:</strong> <%= @routine.content %></p>
-<p><strong>現在の状態:</strong> <%= @routine.status_i18n %></p> <%# 日本語表示にするにはもう少し設定が必要 %>
+<p><strong>現在の状態:</strong> <%= @routine.status_i18n %></p>
 
 <div class="actions">
-  <%# 未完了の場合のみ「達成！」ボタンを表示する %>
-  <% unless @routine.done? %>
-    <%= button_to "このルーティンを達成する！", update_status_routine_path(@routine), method: :patch %>
-  <% end %>
+  <%# 1. 進行中のログ（まだ終わっていない計測）があるか探す %>
+  <% current_log = @routine.study_logs.find_by(ended_at: nil) %>
 
-  <%= link_to "編集する", edit_routine_path(@routine) %>
-  |
-  <%= button_to "削除する", routine_path(@routine), method: :delete, form: { data: { turbo_confirm: "本当に削除しますか？" } } %>
+  <div class="timer-section" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
+    <% if current_log %>
+      <%# 計測中の場合：終了ボタンを表示 %>
+      <p style="color: #e67e22; font-weight: bold;">
+        ⚡ 現在計測中... (開始時刻: <%= current_log.started_at.strftime("%H:%M") %>)
+      </p>
+      <%= button_to "学習を終了して達成！", update_status_routine_path(@routine), 
+          method: :patch, 
+          data: { turbo_confirm: "学習を終了し、経験値を獲得しますか？" },
+          class: "btn-complete" %>
+    <% elsif !@routine.done? %>
+      <%# 未着手（かつ計測もしていない）の場合：開始ボタンを表示 %>
+      <%= button_to "学習を開始する", start_study_routine_path(@routine), 
+          method: :post, 
+          class: "btn-start" %>
+    <% else %>
+      <%# すでに完了している場合 %>
+      <p style="color: green; font-weight: bold;">✅ 本日のルーティンは完了しました！</p>
+    <% end %>
+  </div>
+
+  <%# 編集や削除などの操作ボタン %>
+  <div class="sub-actions" style="margin-top: 10px;">
+    <%= link_to "編集する", edit_routine_path(@routine) %>
+    |
+    <%= button_to "削除する", routine_path(@routine), 
+        method: :delete, 
+        form: { data: { turbo_confirm: "本当に削除しますか？" } },
+        style: "display: inline;" %>
+  </div>
 </div>
 
 <br>

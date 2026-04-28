@@ -33,6 +33,19 @@ class RoutinesController < ApplicationController
   end
 
   def update_status
+    # 1. 現在進行中のログを検索
+    @study_log = @routine.study_logs.find_by(ended_at: nil)
+
+    # 2. ログが存在する場合のみ、終了時刻と学習時間を計算・保存
+    if @study_log
+      finish_time = Time.current
+      duration = ((finish_time - @study_log.started_at) / 60).to_i
+
+      @study_log.update!(
+        ended_at: finish_time,
+        duration_minutes: duration
+      )
+    end
     # トランザクションを使って、ルーティンの更新とキャラの成長を同時に行う
     Routine.transaction do
       @routine.done!
@@ -52,6 +65,19 @@ class RoutinesController < ApplicationController
     end
 
     redirect_to root_path
+  end
+
+  def start_study
+    @routine = Routine.find(params[:id])
+
+    # 新しくStudyLogを作成し、開始時刻を記録する
+    @study_log = @routine.study_logs.create(started_at: Time.current)
+
+    if @study_log.persisted?
+      redirect_to root_path, notice: '学習を開始しました！集中しましょう。'
+    else
+      redirect_to root_path, alert: '学習の開始に失敗しました。'
+    end
   end
 
   private
