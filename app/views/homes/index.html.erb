@@ -1,29 +1,42 @@
 <h1>背徳の育成ゲーム</h1>
 
+<%# キャラクター情報エリア %>
 <% if current_user.character.present? %>
-  <div class="character-info">
+  <div class="character-info" style="background: #f0f8ff; padding: 15px; border-radius: 8px;">
     <h2><%= current_user.character.name %> (Lv.<%= current_user.character.level %>)</h2>
-    <p>現在の経験値: <%= current_user.character.exp %></p>
+    <p>現在の経験値: <%= current_user.character.exp %> / 100</p>
   </div>
 <% else %>
   <p>キャラクターを準備中です...</p>
 <% end %>
 
-<h2>学習ルーティン一覧</h2>
+<h2>今日のルーティン一覧</h2>
 
-<%# ルーティン登録画面へのリンク %>
 <%= link_to "新しいルーティンを登録する", new_routine_path %>
 
-<%# ルーティンの一覧を表示 %>
 <% if @routines.present? %>
-  <ul>
+  <div class="routine-list" style="margin-top: 20px;">
     <% @routines.each do |routine| %>
-      <li>
-        <%# ルーティンの内容をクリックすると詳細へ飛ぶようにする %>
-        <%= link_to routine.content, routine_path(routine) %>
-      </li>
+      <div class="routine-item" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+        
+        <div>
+          <%# タスク内容と状態を表示 %>
+          <strong><%= link_to routine.content, routine_path(routine) %></strong>
+          <span class="status-badge" style="margin-left: 10px; color: <%= routine.done? ? 'green' : 'orange' %>;">
+            [<%= routine.status_i18n %>]
+          </span>
+        </div>
+
+        <%# 未着手なら達成ボタンを表示、完了ならメッセージを表示 %>
+        <% if routine.todo? %>
+          <%= button_to '達成！', update_status_routine_path(routine), method: :patch, data: { turbo_confirm: '達成しますか？' } %>
+        <% else %>
+          <span style="color: gray;">完了済み</span>
+        <% end %>
+
+      </div>
     <% end %>
-  </ul>
+  </div>
 <% else %>
   <p>まだルーティンが登録されていません。まずは登録してみましょう！</p>
 <% end %>
