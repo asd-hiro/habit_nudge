@@ -23,12 +23,10 @@
 
     <div class="flash-messages">
       <% if notice %>
-      <%# styleの指定はあとでcssファイルに記述を移す %>
-        <p class="notice" style="color: green;"><%= notice %></p>
+        <p class="notice" ><%= notice %></p>
       <% end %>
       <% if alert %>
-      <%# styleの指定はあとでcssファイルに記述を移す %>
-        <p class="alert" style="color: red;"><%= alert %></p>
+        <p class="alert" ><%= alert %></p>
       <% end %>
     </div>
 

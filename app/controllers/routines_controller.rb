@@ -37,15 +37,21 @@ class RoutinesController < ApplicationController
     Routine.transaction do
       @routine.done!
 
-      # ログインユーザーのキャラクターを取得して経験値を加算
       character = current_user.character
-      character.exp += 10 # 経験値の獲得量はここを調整する
-      character.save!
+      before_level = character.level
+
+      # キャラクターに経験値を与える処理をモデルに任せる
+      character.add_exp(10)
+
+      # レベルが上がっていたら通知メッセージを生成
+      flash[:notice] = if character.level > before_level
+                         "ルーティン達成！経験値を獲得しました！おめでとう、Lv.#{character.level}に上がりました！"
+                       else
+                         'ルーティン達成！経験値を獲得しました！'
+                       end
     end
 
-    redirect_to root_path, notice: 'ルーティン達成！経験値を10獲得しました！'
-  rescue ActiveRecord::RecordInvalid
-    redirect_to root_path, alert: 'エラーが発生しました。'
+    redirect_to root_path
   end
 
   private
