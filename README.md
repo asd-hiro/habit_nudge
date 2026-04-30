@@ -71,34 +71,67 @@
 大学で学んだ行動経済学の理論をコードに落とし込む過程で、ロジック一つで人の行動（自分自身の習慣）が変わっていく面白さを実感しました。
 プログラミングスクールでの10週間、ただ文法を学ぶだけでなく「ユーザーの行動をどう変えるか」を常に問い続けながら開発しました。実務においても、目的意識を持って技術を選定し、課題を解決できるエンジニアを目指します。
 
-erDiagram
-    users ||--o1 characters : "has_one"
-    users ||--o{ routines : "has_many"
-    routines ||--o{ study_logs : "has_many"
-    
-    users {
-        string name
-        string email
-        string character_name
-    }
-    
-    characters {
-        string name
-        integer level
-        integer exp
-        integer condition
-        datetime last_penalty_at
-    }
-    
-    routines {
-        text content
-        integer status
-    }
-    
-    study_logs {
-        datetime started_at
-        datetime ended_at
-        integer duration_minutes
-        integer focus_score
-        text comment
-    }
+## データベース設計
+
+### users テーブル
+学習者の基本情報および認証情報を管理します。
+
+| Column             | Type   | Options                   |
+| :----------------- | :----- | :------------------------ |
+| name               | string | null: false               |
+| email              | string | null: false, unique: true |
+| encrypted_password | string | null: false               |
+| character_name     | string | null: false（初期設定用） |
+
+#### Association
+- has_one :character
+- has_many :routines
+
+---
+
+### characters テーブル
+「損失回避」ロジックの核となる、キャラクターの状態を管理します。
+
+| Column          | Type     | Options                        |
+| :-------------- | :------- | :----------------------------- |
+| name            | string   | null: false                    |
+| level           | integer  | null: false, default: 1        |
+| exp             | integer  | null: false, default: 0        |
+| condition       | integer  | null: false, default: 0        |
+| last_penalty_at | datetime | 重複実行防止用（1日1回判定）   |
+| user_id         | bigint   | null: false, foreign_key: true |
+
+#### Association
+- belongs_to :user
+
+---
+
+### routines テーブル
+ユーザーが設定した「習慣化したいタスク」を管理します。
+
+| Column  | Type    | Options                        |
+| :------ | :------ | :----------------------------- |
+| content | text    | null: false                    |
+| status  | integer | null: false, default: 0        |
+| user_id | bigint  | null: false, foreign_key: true |
+
+#### Association
+- belongs_to :user
+- has_many :study_logs
+
+---
+
+### study_logs テーブル
+各ルーティンに紐づく、具体的な学習記録を管理します。
+
+| Column           | Type     | Options                        |
+| :--------------- | :------- | :----------------------------- |
+| started_at       | datetime |                                |
+| ended_at         | datetime |                                |
+| duration_minutes | integer  |                                |
+| focus_score      | integer  |                                |
+| comment          | text     |                                |
+| routine_id       | bigint   | null: false, foreign_key: true |
+
+#### Association
+- belongs_to :routine
