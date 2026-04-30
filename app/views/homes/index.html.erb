@@ -56,3 +56,14 @@
 <% else %>
   <p>まだルーティンが登録されていません。まずは登録してみましょう！</p>
 <% end %>
+
+<%# 今日の頑張り（総学習時間）を表示するエリア %>
+<div class="today-stats" style="margin: 20px 0; padding: 20px; background: #fffbe6; border: 2px solid #ffe58f; border-radius: 12px; text-align: center;">
+  <h3 style="margin: 0; color: #856404; font-size: 1.1rem;">🔥 本日の総学習時間</h3>
+  <p style="font-size: 2.5rem; font-weight: bold; margin: 10px 0; color: #d48806;">
+    <%= @total_duration %> <span style="font-size: 1rem;">分</span>
+  </p>
+  <div style="display: flex; justify-content: center; gap: 20px; color: #8c8c8c; font-size: 0.9rem;">
+    <span>完了数: <%= @today_logs.count %> 件</span>
+  </div>
+</div>
