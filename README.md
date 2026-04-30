@@ -71,11 +71,10 @@
 大学で学んだ行動経済学の理論をコードに落とし込む過程で、ロジック一つで人の行動（自分自身の習慣）が変わっていく面白さを実感しました。
 プログラミングスクールでの10週間、ただ文法を学ぶだけでなく「ユーザーの行動をどう変えるか」を常に問い続けながら開発しました。実務においても、目的意識を持って技術を選定し、課題を解決できるエンジニアを目指します。
 
-```mermaid
 erDiagram
     users ||--o1 characters : "has_one"
-    users ||--on routines : "has_many"
-    routines ||--on study_logs : "has_many"
+    users ||--o{ routines : "has_many"
+    routines ||--o{ study_logs : "has_many"
     
     users {
         string name
@@ -89,13 +88,11 @@ erDiagram
         integer exp
         integer condition
         datetime last_penalty_at
-        references user_id
     }
     
     routines {
         text content
         integer status
-        references user_id
     }
     
     study_logs {
@@ -104,6 +101,4 @@ erDiagram
         integer duration_minutes
         integer focus_score
         text comment
-        references routine_id
     }
-    ```
