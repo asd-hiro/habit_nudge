@@ -53,6 +53,22 @@
   }
 </style>
 
+<div style="border: 2px solid #ccc; padding: 20px; margin: 20px 0; text-align: center;">
+  <h3>🎰 運命のスロット</h3>
+  
+  <% if @slot_result %>
+    <div style="font-size: 24px; font-weight: bold; margin: 20px 0; color: #d97706;">
+      <%= @slot_result %>
+    </div>
+    <p>ミッションを完了して、学習を開始しましょう！</p>
+    <%= link_to "やり直す", root_path, style: "color: #888; font-size: 12px;" %>
+  <% else %>
+    <p>二度寝を阻止！今朝の行動を決めよう</p>
+    <%= link_to "スロットを回す", root_path(spin_slot: true), 
+        style: "background: #f1c40f; color: #000; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 5px;" %>
+  <% end %>
+</div>
+
 <%# 2. 今日の頑張りエリア（総学習時間） %>
 <div class="today-stats" style="margin: 20px 0; padding: 20px; background: #fffbe6; border: 2px solid #ffe58f; border-radius: 12px; text-align: center;">
   <h3 style="margin: 0; color: #856404; font-size: 1.1rem;">🔥 本日の総学習時間</h3>

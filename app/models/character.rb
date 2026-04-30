@@ -67,4 +67,14 @@ class Character < ApplicationRecord
     else             '🐉'
     end
   end
+
+  # 朝の二度寝防止ミッションリスト
+  MORNING_MISSIONS = [
+    '冷たい水で顔を洗う 🚿',
+    'スクワットを10回する 🏋️',
+    'ベランダに出て日光を浴びる ☀️',
+    'コップ一杯の白湯を飲む ☕',
+    '好きな曲を1曲爆音で流す 🎵',
+    '1分間だけ片付けをする 🧹'
+  ].freeze
 end

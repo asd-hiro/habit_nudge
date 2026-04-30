@@ -11,6 +11,12 @@ class HomesController < ApplicationController
         flash.now[:alert] = '警告：24時間以上学習が行われなかったため、経験値が 5 減少しました！'
       end
 
+      if params[:spin_slot]
+        # 配列からランダムに1つ抽出してインスタンス変数に代入
+        @slot_result = Character::MORNING_MISSIONS.sample
+        flash.now[:notice] = "運命が決まりました！今日のミッションは「#{@slot_result}」です！"
+      end
+
       # 1. 自分の全ルーティンのIDを取得
       routine_ids = @routines.pluck(:id)
 
