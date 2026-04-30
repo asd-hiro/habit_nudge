@@ -53,8 +53,12 @@ class RoutinesController < ApplicationController
       character = current_user.character
       before_level = character.level
 
-      # キャラクターに経験値を与える処理をモデルに任せる
-      character.add_exp(10)
+      # 学習時間（duration）が取得できていれば計算、なければ基本の10点
+      base_exp = 10
+      time_bonus = @study_log ? @study_log.duration_minutes : 0
+      total_earned_exp = base_exp + time_bonus
+
+      character.add_exp(total_earned_exp)
 
       # レベルが上がっていたら通知メッセージを生成
       flash[:notice] = if character.level > before_level

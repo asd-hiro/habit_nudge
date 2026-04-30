@@ -1,14 +1,68 @@
 <h1>背徳の育成ゲーム</h1>
 
-<%# キャラクター情報エリア %>
-<% if current_user.character.present? %>
-  <div class="character-info" style="background: #f0f8ff; padding: 15px; border-radius: 8px;">
-    <h2><%= current_user.character.name %> (Lv.<%= current_user.character.level %>)</h2>
-    <p>現在の経験値: <%= current_user.character.exp %> / 100</p>
+<%# 1. キャラクターカードエリア %>
+<% if @character.present? %>
+  <%# サボり中なら枠線を赤くし、背景に少し赤みを入れる %>
+  <div class="character-card" style="background: <%= @character.starving? ? '#fff1f0' : '#fff' %>; padding: 25px; border: 3px solid <%= @character.starving? ? '#ff4d4f' : '#333' %>; border-radius: 20px; text-align: center; box-shadow: 8px 8px 0px <%= @character.starving? ? '#ff4d4f' : '#333' %>; margin-bottom: 30px; transition: all 0.3s;">
+    
+    <%# サボり中の警告メッセージ %>
+    <% if @character.starving? %>
+      <div style="font-size: 0.8rem; color: #ff4d4f; font-weight: bold; margin-bottom: 10px; animation: blink 1.5s infinite;">
+        ⚠️ 最終学習から24時間経過：経験値が減少中！
+      </div>
+    <% end %>
+
+    <%# ランク・称号 %>
+    <div style="font-size: 0.9rem; color: #666; font-weight: bold; margin-bottom: 10px; letter-spacing: 0.1em;">
+      ━━ <%= @character.rank_name %> ━━
+    </div>
+
+    <%# メインビジュアル %>
+    <div style="font-size: 100px; line-height: 1.2; margin: 15px 0;">
+      <%= @character.image_display %>
+    </div>
+
+    <%# キャラ名とレベル %>
+    <h2 style="margin: 0; font-size: 1.8rem;"><%= @character.name %> <span style="font-size: 0.9rem; color: #555;">(Lv.<%= @character.level %>)</span></h2>
+    
+    <%# 経験値ゲージ %>
+    <div style="max-width: 300px; margin: 20px auto 10px;">
+      <div style="width: 100%; background: #e0e0e0; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid #ccc;">
+        <%# サボり中はゲージを赤くし、そうでない時は緑にする %>
+        <div style="width: <%= @character.exp %>%; background: <%= @character.starving? ? 'linear-gradient(90deg, #ff7875, #ff4d4f)' : 'linear-gradient(90deg, #2ecc71, #27ae60)' %>; height: 100%; transition: width 0.8s ease-out;"></div>
+      </div>
+      <p style="font-size: 12px; color: <%= @character.starving? ? '#ff4d4f' : '#777' %>; margin-top: 8px; font-weight: bold;">
+        <% if @character.starving? %>
+          警告：衰退モード (現在: <%= @character.exp %> / 100)
+        <% else %>
+          NEXTまで: <%= 100 - @character.exp %> EXP (現在: <%= @character.exp %> / 100)
+        <% end %>
+      </p>
+    </div>
   </div>
 <% else %>
   <p>キャラクターを準備中です...</p>
 <% end %>
+
+<%# 点滅アニメーションのスタイルを追加 %>
+<style>
+  @keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+</style>
+
+<%# 2. 今日の頑張りエリア（総学習時間） %>
+<div class="today-stats" style="margin: 20px 0; padding: 20px; background: #fffbe6; border: 2px solid #ffe58f; border-radius: 12px; text-align: center;">
+  <h3 style="margin: 0; color: #856404; font-size: 1.1rem;">🔥 本日の総学習時間</h3>
+  <p style="font-size: 2.5rem; font-weight: bold; margin: 10px 0; color: #d48806;">
+    <%= @total_duration %> <span style="font-size: 1rem;">分</span>
+  </p>
+  <div style="display: flex; justify-content: center; gap: 20px; color: #8c8c8c; font-size: 0.9rem;">
+    <span>完了数: <%= @today_logs.count %> 件</span>
+  </div>
+</div>
 
 <h2>今日のルーティン一覧</h2>
 
@@ -56,14 +110,3 @@
 <% else %>
   <p>まだルーティンが登録されていません。まずは登録してみましょう！</p>
 <% end %>
-
-<%# 今日の頑張り（総学習時間）を表示するエリア %>
-<div class="today-stats" style="margin: 20px 0; padding: 20px; background: #fffbe6; border: 2px solid #ffe58f; border-radius: 12px; text-align: center;">
-  <h3 style="margin: 0; color: #856404; font-size: 1.1rem;">🔥 本日の総学習時間</h3>
-  <p style="font-size: 2.5rem; font-weight: bold; margin: 10px 0; color: #d48806;">
-    <%= @total_duration %> <span style="font-size: 1rem;">分</span>
-  </p>
-  <div style="display: flex; justify-content: center; gap: 20px; color: #8c8c8c; font-size: 0.9rem;">
-    <span>完了数: <%= @today_logs.count %> 件</span>
-  </div>
-</div>

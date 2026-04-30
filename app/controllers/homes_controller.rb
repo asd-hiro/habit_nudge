@@ -5,6 +5,12 @@ class HomesController < ApplicationController
       @character = current_user.character
       @routines = current_user.routines.order(created_at: :desc)
 
+      # --- 損失回避のペナルティ処理 ---
+      if @character.needs_penalty?
+        @character.apply_penalty!(5)
+        flash.now[:alert] = '警告：24時間以上学習が行われなかったため、経験値が 5 減少しました！'
+      end
+
       # 1. 自分の全ルーティンのIDを取得
       routine_ids = @routines.pluck(:id)
 
