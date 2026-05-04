@@ -15,10 +15,10 @@ https://habit-nudge.onrender.com
 ---
 
 ## テスト用アカウント
-- **メールアドレス**: test@example.com
-- **パスワード**: password123
 - **Basic認証ID**: pirorikin
 - **Basic認証Pass**: 0211
+- **メールアドレス**: test@example.com
+- **パスワード**: password123
 
 ---
 
