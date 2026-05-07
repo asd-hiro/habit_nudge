@@ -1,8 +1,6 @@
 class Character < ApplicationRecord
   belongs_to :user
 
-  validates :name, presence: true
-
   # レベルアップに必要な経験値（例: 100）
   LEVEL_UP_THRESHOLD = 100
 

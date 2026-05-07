@@ -16,8 +16,11 @@
 
           <div class="char-status-brief">
             <h2 class="char-name-display">
-              <%= @character.name %> 
+              <%= current_user.character_name %> 
               <span class="level-label">Lv.<%= @character.level %></span>
+              <%= link_to edit_user_registration_path, class: "btn-settings-small" do %>
+                ⚙️
+              <% end %>
             </h2>
             
             <div class="exp-gauge-home">

@@ -1,3 +1,5 @@
+@import "devise";
+
 /* ==========================================================================
    ベース & ヘッダー
    ========================================================================== */
@@ -83,6 +85,26 @@ body {
   margin-right: 8px;
 }
 
+.settings-btn {
+  background-color: #ecf0f1; /* 薄いグレー */
+  color: #34495e;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.settings-btn:hover {
+  background-color: #bdc3c7;
+}
+
+/* 他のボタンとの隙間を調整（既存のnav-btnにマージンがない場合） */
+.nav-buttons {
+  display: flex;
+  gap: 10px; /* ボタン同士の間隔 */
+  align-items: center;
+}
+
 /* ==========================================================================
    キャラクターカード（ホーム & マイページ共通）
    ========================================================================== */
@@ -125,6 +147,22 @@ body {
 
 .character-image { font-size: 100px; margin: 15px 0; }
 .char-img-container { font-size: 80px; }
+
+.btn-settings {
+  display: inline-block;
+  padding: 5px 12px;
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+}
+
+.btn-settings:hover {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
 
 /* 経験値ゲージ */
 .exp-bar-bg {

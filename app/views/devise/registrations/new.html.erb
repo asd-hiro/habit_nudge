@@ -1,39 +1,45 @@
-<h2>Sign up</h2>
+<div class="content-wrapper">
+  <div class="auth-card">
+    <h2 class="auth-title">新規登録</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name, autofocus: true %>
-  </div>
+      <div class="field">
+        <%= f.label :name, "ユーザー名" %>
+        <%= f.text_field :name, autofocus: true, class: "form-input" %>
+      </div>
 
-  <div class="field">
-    <%= f.label :character_name, "キャラクターの名前" %><br />
-    <%= f.text_field :character_name, autofocus: true %>
-  </div>
+      <div class="field">
+        <%= f.label :character_name, "相棒の名前" %>
+        <%= f.text_field :character_name, class: "form-input", placeholder: "キャラクターに名前をつけよう" %>
+      </div>
 
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
-  </div>
+      <div class="field">
+        <%= f.label :email, "メールアドレス" %>
+        <%= f.email_field :email, autocomplete: "email", class: "form-input" %>
+      </div>
 
-  <div class="field">
-    <p><%= f.label :password %></p>
-    <% if @minimum_password_length %>
-      <p><em>(<%= @minimum_password_length %> characters minimum)</em></p>
+      <div class="field">
+        <%= f.label :password, "パスワード" %>
+        <% if @minimum_password_length %>
+          <em class="form-hint">(<%= @minimum_password_length %> 文字以上)</em>
+        <% end %>
+        <%= f.password_field :password, autocomplete: "new-password", class: "form-input" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation, "パスワード（確認用）" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-input" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "登録を開始する", class: "btn-primary full-width" %>
+      </div>
     <% end %>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-  </div>
 
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
+    <div class="auth-links">
+      <%= render "devise/shared/links" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
