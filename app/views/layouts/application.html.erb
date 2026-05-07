@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>HabitNudge</title>
+    <title>BiasHack</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,25 +11,40 @@
   </head>
 
   <body>
-    <header>
-      <% if user_signed_in? %>
-        <p>こんにちは、<%= current_user.name %>さん！</p>
-        <%= button_to "ログアウト", destroy_user_session_path, method: :delete %>
-      <% else %>
-        <%= link_to "新規登録", new_user_registration_path %>
-        <%= link_to "ログイン", new_user_session_path %>
-      <% end %>
+    <header class="main-header">
+      <div class="header-inner">
+        <div class="header-logo">
+          <%= link_to "BiasHack", root_path, class: "logo-link" %>
+        </div>
+
+        <nav class="header-nav">
+          <% if user_signed_in? %>
+            <span class="user-greeting">こんにちは、<%= current_user.name %>さん</span>
+            <div class="nav-buttons">
+              <%= link_to "マイページ", user_path, class: "nav-btn mypage-btn" %>
+              <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "nav-btn logout-btn" %>
+            </div>
+          <% else %>
+            <div class="nav-buttons">
+              <%= link_to "新規登録", new_user_registration_path, class: "nav-btn signup-btn" %>
+              <%= link_to "ログイン", new_user_session_path, class: "nav-btn login-btn" %>
+            </div>
+          <% end %>
+        </nav>
+      </div>
     </header>
 
     <div class="flash-messages">
       <% if notice %>
-        <p class="notice" ><%= notice %></p>
+        <p class="notice"><%= notice %></p>
       <% end %>
       <% if alert %>
-        <p class="alert" ><%= alert %></p>
+        <p class="alert"><%= alert %></p>
       <% end %>
     </div>
 
-    <%= yield %>
+    <main class="main-content">
+      <%= yield %>
+    </main>
   </body>
 </html>

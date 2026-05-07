@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
+  get 'users/show'
   devise_for :users
   get 'homes/index'
+  resource :user, only: [:show]
   resources :routines, only: [:new, :create, :edit, :update, :destroy, :show]
   
   resources :routines do

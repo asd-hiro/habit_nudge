@@ -1,11 +1,24 @@
-<h2>ルーティンを編集する</h2>
+<div class="content-wrapper">
+  <div class="form-card">
+    <h2 class="page-title">ルーティンを編集する</h2>
+    
+    <p class="form-instruction">
+      現在の状況に合わせて、活動内容を最適化しましょう。
+    </p>
 
-<%= form_with model: @routine do |f| %>
-  <div class="field">
-    <%= f.label :content, "学習内容" %><br />
-    <%= f.text_area :content, rows: 5 %>
+    <%= form_with model: @routine, local: true, class: "routine-form" do |f| %>
+      <div class="field">
+        <%= f.label :content, "活動内容" %>
+        <%= f.text_area :content, rows: 5, class: "custom-textarea" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "内容を更新する", class: "btn-submit btn-update-theme" %>
+      </div>
+    <% end %>
+
+    <div class="back-link-container">
+      <%= link_to "← マイページに戻る", routine_path(@routine), class: "back-link" %>
+    </div>
   </div>
-  <%= f.submit "更新する" %>
-<% end %>
-
-<%= link_to "戻る", root_path %>
+</div>

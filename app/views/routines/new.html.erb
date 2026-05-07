@@ -1,15 +1,25 @@
-<h2>新しい学習ルーティンを決める</h2>
-<p>キャラクターを育てるために、毎日続ける学習内容を入力してください。</p>
+<div class="content-wrapper">
+  <div class="form-card">
+    <h2 class="page-title">新しいルーティンを決める</h2>
+    
+    <p class="form-instruction">
+      キャラクターを育てるために、毎日続ける内容を入力してください。<br>
+      無理のない範囲から始めるのが継続のコツです。
+    </p>
 
-<%= form_with model: @routine, local: true do |f| %>
-  <div class="field">
-    <%= f.label :content, "学習内容（例：Railsの教材を3章進める）" %><br />
-    <%= f.text_area :content, placeholder: "ここに入力...", rows: 5 %>
+    <%= form_with model: @routine, local: true, class: "routine-form" do |f| %>
+      <div class="field">
+        <%= f.label :content, "活動内容（例：Railsの教材を3章進める）" %>
+        <%= f.text_area :content, placeholder: "ここに入力...", rows: 5, class: "custom-textarea" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "ルーティンを登録する", class: "btn-submit btn-start-theme" %>
+      </div>
+    <% end %>
+
+    <div class="back-link-container">
+      <%= link_to "← マイページに戻る", user_path, class: "back-link" %>
+    </div>
   </div>
-
-  <div class="actions">
-    <%= f.submit "ルーティンを登録する" %>
-  </div>
-<% end %>
-
-<%= link_to "戻る", root_path %>
+</div>

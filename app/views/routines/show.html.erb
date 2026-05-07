@@ -1,43 +1,54 @@
-<h2>学習ルーティンの詳細</h2>
+<div class="content-wrapper">
+  <div class="status-card">
+    <h2 class="page-title">ルーティンの詳細</h2>
 
-<p><strong>内容:</strong> <%= @routine.content %></p>
-<p><strong>現在の状態:</strong> <%= @routine.status_i18n %></p>
+    <div class="info-group">
+      <label>内容</label>
+      <p class="content-text"><%= @routine.content %></p>
+    </div>
 
-<div class="actions">
-  <%# 1. 進行中のログ（まだ終わっていない計測）があるか探す %>
-  <% current_log = @routine.study_logs.find_by(ended_at: nil) %>
+    <div class="info-group">
+      <label>現在の状態</label>
+      <span class="status-badge <%= @routine.status %>">
+        <%= @routine.status_i18n %>
+      </span>
+    </div>
 
-  <div class="timer-section" style="margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px;">
-    <% if current_log %>
-      <%# 計測中の場合：終了ボタンを表示 %>
-      <p style="color: #e67e22; font-weight: bold;">
-        ⚡ 現在計測中... (開始時刻: <%= current_log.started_at.strftime("%H:%M") %>)
-      </p>
-      <%= button_to "学習を終了して達成！", update_status_routine_path(@routine), 
-          method: :patch, 
-          data: { turbo_confirm: "学習を終了し、経験値を獲得しますか？" },
-          class: "btn-complete" %>
-    <% elsif !@routine.done? %>
-      <%# 未着手（かつ計測もしていない）の場合：開始ボタンを表示 %>
-      <%= button_to "学習を開始する", start_study_routine_path(@routine), 
-          method: :post, 
-          class: "btn-start" %>
-    <% else %>
-      <%# すでに完了している場合 %>
-      <p style="color: green; font-weight: bold;">✅ 本日のルーティンは完了しました！</p>
-    <% end %>
-  </div>
+    <hr class="separator">
 
-  <%# 編集や削除などの操作ボタン %>
-  <div class="sub-actions" style="margin-top: 10px;">
-    <%= link_to "編集する", edit_routine_path(@routine) %>
-    |
-    <%= button_to "削除する", routine_path(@routine), 
-        method: :delete, 
-        form: { data: { turbo_confirm: "本当に削除しますか？" } },
-        style: "display: inline;" %>
+    <div class="timer-section">
+      <% current_log = @routine.study_logs.find_by(ended_at: nil) %>
+
+      <% if current_log %>
+        <div class="active-status">
+          <span class="pulse-icon">⚡</span>
+          <p>現在計測中... (開始: <%= current_log.started_at.strftime("%H:%M") %>)</p>
+        </div>
+        <%= button_to "活動を終了して達成！", update_status_routine_path(@routine), 
+              method: :patch, 
+              data: { turbo_confirm: "活動を終了し、経験値を獲得しますか？" },
+              class: "btn-action btn-complete" %>
+      <% elsif !@routine.done? %>
+        <%= button_to "活動を開始する", start_study_routine_path(@routine), 
+              method: :post, 
+              class: "btn-action btn-start" %>
+      <% else %>
+        <div class="done-status">
+          <p>✅ 本日のルーティンは完了しました！</p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="sub-actions">
+      <%= link_to "編集する", edit_routine_path(@routine), class: "link-edit" %>
+      <%= button_to "削除する", routine_path(@routine), 
+            method: :delete, 
+            form: { data: { turbo_confirm: "本当に削除しますか？" } },
+            class: "link-delete" %>
+    </div>
+
+    <div class="back-link-container">
+      <%= link_to "← 一覧に戻る", user_path, class: "back-link" %>
+    </div>
   </div>
 </div>
-
-<br>
-<%= link_to "一覧に戻る", root_path %>

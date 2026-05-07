@@ -1,0 +1,15 @@
+<div class="mypage-wrapper">
+  <h1><%= @user.name %> さんのマイページ</h1>
+  
+  <div class="status-card">
+    <p>キャラクター: <%= @user.character_name %></p>
+    <%# ここに今後、経験値やグラフを追加していく %>
+  </div>
+
+  <div class="my-routines">
+    <h3>現在のルーティン</h3>
+    <% @routines.each do |routine| %>
+      <p><%= link_to routine.content, routine_path(routine) %></p>
+    <% end %>
+  </div>
+</div>
