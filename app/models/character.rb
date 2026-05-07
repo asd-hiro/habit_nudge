@@ -68,6 +68,22 @@ class Character < ApplicationRecord
     end
   end
 
+  def slot_available?
+    last_slot_at.nil? || last_slot_at < Time.current.beginning_of_day
+  end
+
+  # ミッションを実行し、時間を更新する
+  def spin_slot!
+    return nil unless slot_available?
+
+    # 定数からランダムに選択（Characterクラスの外に定数がある場合は適切に参照してください）
+    mission = MORNING_MISSIONS.sample
+
+    # 実行時間を記録して保存
+    update!(last_slot_at: Time.current)
+    mission
+  end
+
   # 朝の二度寝防止ミッションリスト
   MORNING_MISSIONS = [
     '冷たい水で顔を洗う 🚿',
