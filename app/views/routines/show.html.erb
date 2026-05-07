@@ -1,6 +1,6 @@
 <div class="content-wrapper">
   <div class="status-card">
-    <h2 class="page-title">ルーティンの詳細</h2>
+    <h2 class="page-title">タスクの詳細</h2>
 
     <div class="info-group">
       <label>内容</label>
@@ -17,24 +17,34 @@
     <hr class="separator">
 
     <div class="timer-section">
-      <% current_log = @routine.study_logs.find_by(ended_at: nil) %>
-
-      <% if current_log %>
+      <% if @routine.doing? %>
+        <%# 進行中の場合：計測ログを表示し、達成ボタンを出す %>
+        <% current_log = @routine.study_logs.find_by(ended_at: nil) %>
         <div class="active-status">
           <span class="pulse-icon">⚡</span>
-          <p>現在計測中... (開始: <%= current_log.started_at.strftime("%H:%M") %>)</p>
+          <p>
+            現在計測中... 
+            <% if current_log %>
+              (開始: <%= current_log.started_at.strftime("%H:%M") %>)
+            <% end %>
+          </p>
         </div>
-        <%= button_to "活動を終了して達成！", update_status_routine_path(@routine), 
+        <%= button_to "タスクを終了して達成！", update_status_routine_path(@routine), 
               method: :patch, 
-              data: { turbo_confirm: "活動を終了し、経験値を獲得しますか？" },
+              data: { turbo_confirm: "タスクを終了し、経験値を獲得しますか？" },
               class: "btn-action btn-complete" %>
-      <% elsif !@routine.done? %>
-        <%= button_to "活動を開始する", start_study_routine_path(@routine), 
+
+      <% elsif @routine.todo? %>
+        <%# 未着手の場合：開始ボタンを出す %>
+        <%= button_to "タスクを開始する", start_study_routine_path(@routine), 
               method: :post, 
               class: "btn-action btn-start" %>
+
       <% else %>
+        <%# done (達成済み) の場合：お祝いメッセージのみ %>
         <div class="done-status">
-          <p>✅ 本日のルーティンは完了しました！</p>
+          <p>✅ このタスクは完了しました！</p>
+          <p class="exp-get-msg">経験値は獲得済みです。</p>
         </div>
       <% end %>
     </div>

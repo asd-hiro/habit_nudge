@@ -1,15 +1,75 @@
-<div class="mypage-wrapper">
-  <h1><%= @user.name %> さんのマイページ</h1>
-  
-  <div class="status-card">
-    <p>キャラクター: <%= @user.character_name %></p>
-    <%# ここに今後、経験値やグラフを追加していく %>
-  </div>
+<div class="content-wrapper">
+  <%# 1. キャラクターステータス詳細エリア %>
+  <% if @character.present? %>
+    <section class="mypage-section">
+      <div class="character-detail-card <%= 'is-starving' if @character.starving? %>">
+        
+        <div class="rank-label">━━ <%= @character.rank_name if @character.respond_to?(:rank_name) %> ━━</div>
 
-  <div class="my-routines">
-    <h3>現在のルーティン</h3>
-    <% @routines.each do |routine| %>
-      <p><%= link_to routine.content, routine_path(routine) %></p>
-    <% end %>
-  </div>
+        <div class="character-image">
+          <%= @character.image_display if @character.respond_to?(:image_display) %>
+        </div>
+
+        <h2 class="char-name-display">
+          <%= @character.name %> 
+          <span class="level-label">Lv.<%= @character.level %></span>
+        </h2>
+        
+        <% if @character.starving? %>
+          <div class="blink-warning">⚠️ 衰退モード：タスクが必要です</div>
+        <% end %>
+
+        <div class="exp-gauge-container">
+          <div class="exp-bar-bg">
+            <div class="exp-bar-fill" style="width: <%= @character.exp %>%;"></div>
+          </div>
+          <p class="exp-info-text">
+            <% if @character.starving? %>
+              警告：経験値減少中 (現在: <%= @character.exp %> / 100)
+            <% else %>
+              NEXTまで: <%= 100 - @character.exp %> EXP (現在: <%= @character.exp %> / 100)
+            <% end %>
+          </p>
+        </div>
+
+        <div class="char-extra-stats">
+          <div class="stat-item">
+            <span class="label">コンディション</span>
+            <span class="value"><%= @character.display_condition %></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% else %>
+    <p class="empty-message">キャラクターが設定されていません。</p>
+  <% end %>
+
+  <%# 2. 統計データエリア（本日の頑張り） %>
+  <section class="all-routines-section">
+    <div class="section-header">
+      <h3 class="section-title">登録中の全タスク</h3>
+      <%= link_to "＋ タスクを追加", new_routine_path, class: "btn-add-action" %>
+    </div>
+
+    <div class="routine-list-grid">
+      <% @routines.each do |routine| %>
+        <div class="routine-item-card <%= 'is-done' if routine.done? %>">
+          <div class="routine-item-main">
+            <div class="routine-item-info">
+              <span class="status-tag <%= routine.status %>">
+                <%= routine.status_i18n %>
+              </span>
+              <%= link_to routine.content, routine_path(routine), class: "routine-item-link" %>
+            </div>
+          
+            <div class="routine-item-actions">
+              <%= link_to "編集", edit_routine_path(routine), class: "btn-edit-small" %>
+              <%# 削除ボタンも必要であれば（Turboを使う場合はmethod指定に注意） %>
+              <%#= link_to "削除", routine_path(routine), data: { turbo_method: :delete, turbo_confirm: "削除しますか？" }, class: "btn-delete-small" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
 </div>

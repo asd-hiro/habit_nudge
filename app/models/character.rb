@@ -76,11 +76,14 @@ class Character < ApplicationRecord
   def spin_slot!
     return nil unless slot_available?
 
-    # 定数からランダムに選択（Characterクラスの外に定数がある場合は適切に参照してください）
+    # 定数からランダムに選択
     mission = MORNING_MISSIONS.sample
 
-    # 実行時間を記録して保存
-    update!(last_slot_at: Time.current)
+    # 実行時間と「ミッション内容」の両方をDBに保存する
+    update!(
+      last_slot_at: Time.current,
+      daily_mission: mission
+    )
     mission
   end
 
@@ -93,4 +96,14 @@ class Character < ApplicationRecord
     '好きな曲を1曲爆音で流す 🎵',
     '1分間だけ片付けをする 🧹'
   ].freeze
+
+  def display_condition
+    if starving?
+      '絶不調（要学習）'
+    elsif user.routines.exists?(status: 'done')
+      '絶好調！'
+    else
+      '普通'
+    end
+  end
 end

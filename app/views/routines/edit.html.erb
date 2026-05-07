@@ -1,6 +1,6 @@
 <div class="content-wrapper">
   <div class="form-card">
-    <h2 class="page-title">ルーティンを編集する</h2>
+    <h2 class="page-title">タスクを編集する</h2>
     
     <p class="form-instruction">
       現在の状況に合わせて、活動内容を最適化しましょう。
@@ -8,7 +8,7 @@
 
     <%= form_with model: @routine, local: true, class: "routine-form" do |f| %>
       <div class="field">
-        <%= f.label :content, "活動内容" %>
+        <%= f.label :content, "タスク内容" %>
         <%= f.text_area :content, rows: 5, class: "custom-textarea" %>
       </div>
 

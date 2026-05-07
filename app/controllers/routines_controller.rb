@@ -7,7 +7,7 @@ class RoutinesController < ApplicationController
   def create
     @routine = current_user.routines.build(routine_params)
     if @routine.save
-      redirect_to root_path, notice: '新しい学習ルーティンを登録しました！'
+      redirect_to root_path, notice: '新しいタスクを登録しました！'
     else
       render :new, status: :unprocessable_entity
     end
@@ -21,7 +21,7 @@ class RoutinesController < ApplicationController
 
   def update
     if @routine.update(routine_params)
-      redirect_to root_path, notice: 'ルーティンを更新しました！'
+      redirect_to root_path, notice: 'タスクを更新しました！'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -29,10 +29,13 @@ class RoutinesController < ApplicationController
 
   def destroy
     @routine.destroy
-    redirect_to root_path, notice: 'ルーティンを削除しました。'
+    redirect_to root_path, notice: 'タスクを削除しました。'
   end
 
   def update_status
+    # すでに done の場合は、これ以上処理せずにリダイレクトさせる（不正防止）
+    return redirect_to root_path, alert: 'このタスクは既に達成済みです。' if @routine.done?
+
     # 1. 現在進行中のログを検索
     @study_log = @routine.study_logs.find_by(ended_at: nil)
 
@@ -62,9 +65,9 @@ class RoutinesController < ApplicationController
 
       # レベルが上がっていたら通知メッセージを生成
       flash[:notice] = if character.level > before_level
-                         "ルーティン達成！経験値を獲得しました！おめでとう、Lv.#{character.level}に上がりました！"
+                         "タスク達成！経験値を獲得しました！おめでとう、Lv.#{character.level}に上がりました！"
                        else
-                         'ルーティン達成！経験値を獲得しました！'
+                         'タスク達成！経験値を獲得しました！'
                        end
     end
 
@@ -74,13 +77,12 @@ class RoutinesController < ApplicationController
   def start_study
     @routine = Routine.find(params[:id])
 
-    # 新しくStudyLogを作成し、開始時刻を記録する
-    @study_log = @routine.study_logs.create(started_at: Time.current)
-
-    if @study_log.persisted?
-      redirect_to root_path, notice: '学習を開始しました！集中しましょう。'
+    # 1. ルーティンのステータスを「doing」に更新
+    # 2. 同時にStudyLogを作成する
+    if @routine.doing! && @routine.study_logs.create(started_at: Time.current)
+      redirect_to root_path, notice: 'タスクを開始しました！集中しましょう。'
     else
-      redirect_to root_path, alert: '学習の開始に失敗しました。'
+      redirect_to root_path, alert: 'タスクの開始に失敗しました。'
     end
   end
 

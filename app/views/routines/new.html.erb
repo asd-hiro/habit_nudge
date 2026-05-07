@@ -1,6 +1,6 @@
 <div class="content-wrapper">
   <div class="form-card">
-    <h2 class="page-title">新しいルーティンを決める</h2>
+    <h2 class="page-title">新しいタスクを決める</h2>
     
     <p class="form-instruction">
       キャラクターを育てるために、毎日続ける内容を入力してください。<br>
@@ -9,12 +9,12 @@
 
     <%= form_with model: @routine, local: true, class: "routine-form" do |f| %>
       <div class="field">
-        <%= f.label :content, "活動内容（例：Railsの教材を3章進める）" %>
+        <%= f.label :content, "タスク内容（例：Railsの教材を3章進める）" %>
         <%= f.text_area :content, placeholder: "ここに入力...", rows: 5, class: "custom-textarea" %>
       </div>
 
       <div class="actions">
-        <%= f.submit "ルーティンを登録する", class: "btn-submit btn-start-theme" %>
+        <%= f.submit "タスクを登録する", class: "btn-submit btn-start-theme" %>
       </div>
     <% end %>
 

@@ -1,96 +1,106 @@
-  <%# 1. キャラクターカードエリア %>
+<div class="content-wrapper">
+  <%# 1. キャラクターアラートエリア %>
   <% if @character.present? %>
-    <div class="character-card <%= 'is-starving' if @character.starving? %>">
-      
-      <% if @character.starving? %>
-        <div class="blink-text">⚠️ 最終学習から24時間経過：経験値が減少中！</div>
-      <% end %>
+    <section class="home-character-section">
+      <div class="character-alert-card <%= 'is-starving' if @character.starving? %>">
+        <% if @character.starving? %>
+          <div class="blink-warning">⚠️ 警告：24時間以上学習が空いています！経験値が減少中</div>
+        <% end %>
 
-      <div class="rank-label">━━ <%= @character.rank_name %> ━━</div>
-
-      <div class="character-image">
-        <%= @character.image_display %>
-      </div>
-
-      <h2 style="margin: 0;"><%= @character.name %> <span>(Lv.<%= @character.level %>)</span></h2>
-      
-      <div class="exp-gauge-container">
-        <div class="exp-bar-bg">
-          <div class="exp-bar-fill" style="width: <%= @character.exp %>%;"></div>
-        </div>
-        <p style="font-size: 12px; font-weight: bold; margin-top: 8px; color: <%= @character.starving? ? '#ff4d4f' : '#777' %>;">
-          <% if @character.starving? %>
-            警告：衰退モード (現在: <%= @character.exp %> / 100)
-          <% else %>
-            NEXTまで: <%= 100 - @character.exp %> EXP (現在: <%= @character.exp %> / 100)
-          <% end %>
-        </p>
-      </div>
-    </div>
-  <% else %>
-    <p>キャラクターを準備中です...</p>
-  <% end %>
-
-  <%# 運命のスロット %>
-  <div class="slot-section">
-  <h3>🎰 運命のスロット</h3>
-
-  <% if @slot_result %>
-    <%# スロットを回した直後、または既に今日回している場合 %>
-    <div class="slot-result">
-      今日のミッション：<strong><%= @slot_result %></strong>
-    </div>
-    <p>迷いは禁物です。まずはこのアクションから一日を始めましょう！</p>
-  <% elsif @character.slot_available? %>
-    <%# まだ今日回していない場合 %>
-    <p>二度寝を阻止！今朝の行動をシステムに委ねよう</p>
-    <%= link_to "スロットを回す", root_path(spin_slot: true), class: "btn-slot" %>
-  <% else %>
-    <%# 万が一セッションが切れたがDB上は回し済みの場合の保険 %>
-    <p>本日の決断はすでに下されました。学習画面へ進みましょう。</p>
-  <% end %>
-</div>
-
-  <%# 2. 今日の頑張りエリア %>
-  <div class="today-stats">
-    <h3 style="margin: 0; color: #856404;">🔥 本日の総学習時間</h3>
-    <p class="stats-value">
-      <%= @total_duration %> <span style="font-size: 1rem;">分</span>
-    </p>
-    <div style="color: #8c8c8c; font-size: 0.9rem;">
-      完了数: <%= @today_logs.count %> 件
-    </div>
-  </div>
-
-  <h2>今日のルーティン一覧</h2>
-  <%= link_to "＋ 新しいルーティンを登録", new_routine_path, class: "add-link" %>
-
-  <% if @routines.present? %>
-    <div class="routine-list">
-      <% @routines.each do |routine| %>
-        <div class="routine-item">
-          <div>
-            <strong><%= link_to routine.content, routine_path(routine) %></strong>
-            <span style="margin-left: 10px; color: <%= routine.done? ? '#2ecc71' : '#f39c12' %>;">
-              [<%= routine.status_i18n %>]
-            </span>
-            <% current_log = routine.study_logs.find_by(ended_at: nil) %>
-            <% if current_log %>
-              <br><small style="color: #e67e22;">🕒 計測開始: <%= current_log.started_at.strftime("%H:%M") %></small>
-            <% end %>
+        <div class="char-layout">
+          <div class="char-visual">
+            <div class="char-img-container">
+              <%= @character.image_display %>
+            </div>
           </div>
 
-          <div class="actions">
-            <% if current_log %>
-              <%= button_to '終了して達成！', update_status_routine_path(routine), method: :patch, class: "btn-end", data: { turbo_confirm: '学習を終了しますか？' } %>
-            <% elsif routine.todo? %>
-              <%= button_to '学習開始', start_study_routine_path(routine), method: :post, class: "btn-start" %>
-            <% else %>
-              <span style="color: gray;">完了済み</span>
-            <% end %>
+          <div class="char-status-brief">
+            <h2 class="char-name-display">
+              <%= @character.name %> 
+              <span class="level-label">Lv.<%= @character.level %></span>
+            </h2>
+            
+            <div class="exp-gauge-home">
+              <div class="exp-bar-bg">
+                <div class="exp-bar-fill" style="width: <%= @character.exp %>%;"></div>
+              </div>
+              <p class="exp-info-text">
+                NEXT: <%= 100 - @character.exp %> EXP (現在: <%= @character.exp %> / 100)
+              </p>
+            </div>
           </div>
         </div>
-      <% end %>
+      </div>
+    </section>
+  <% else %>
+    <div class="no-character-msg">
+      <p>キャラクターを召喚してください。</p>
     </div>
   <% end %>
+
+  <%# 2. 運命のスロット %>
+  <section class="slot-section card-box">
+    <h3 class="section-title">🎰 運命のスロット</h3>
+    <% if @slot_result %>
+      <div class="slot-result-display">
+        <span class="mission-label">今日の優先ミッション</span>
+        <strong class="mission-content"><%= @slot_result %></strong>
+      </div>
+      <p class="slot-hint">システムが選んだ最善の策です。迷わず開始しましょう！</p>
+    <% elsif @character&.slot_available? %>
+      <p class="slot-instruction">何から始めるか迷っていませんか？決断をシステムに委ねましょう。</p>
+      <%= link_to "スロットを回す", root_path(spin_slot: true), class: "btn-slot-run" %>
+    <% else %>
+      <p class="slot-instruction-done">本日のミッションは決定済みです。リストを確認してください。</p>
+    <% end %>
+  </section>
+
+  <%# 3. タスク一覧 %>
+  <section class="routine-section">
+    <div class="section-header">
+      <h2 class="section-title">タスク一覧</h2>
+      <%= link_to "すべて見る", user_path, class: "btn-sub-action" %>
+    </div>
+
+    <%# --- 修正ポイント：判定を1つにまとめ、コントローラーの変数 @active_routines を使用 --- %>
+    <% if @active_routines.present? %>
+      <div class="routine-list-grid">
+        <% @active_routines.each do |routine| %>
+          <div class="routine-item-card">
+            <div class="routine-item-main">
+              <div class="routine-item-info">
+                <%= link_to routine_path(routine), class: "status-link" do %>
+                  <span class="status-tag <%= routine.status %>">
+                    <%= routine.status_i18n %>
+                  </span>
+                <% end %>
+                <%= link_to routine.content, routine_path(routine), class: "routine-item-link" %>
+              </div>
+            
+              <div class="routine-item-actions">
+                <% if routine.todo? %>
+                  <%= button_to '開始', start_study_routine_path(routine), method: :post, class: "btn-start-action" %>
+                <% elsif routine.doing? %>
+                  <%= button_to "達成！", update_status_routine_path(routine), 
+                        method: :patch, 
+                        data: { turbo_confirm: "タスクを終了し、経験値を獲得しますか？" },
+                        class: "btn-start-action", style: "background-color: #2ecc71;" %>
+                <% elsif routine.done? %>
+                  <span class="done-label">達成済み！</span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-routine-box">
+        <p>現在、未完了のタスクはありません。素晴らしい！</p>
+      </div>
+    <% end %>
+    
+    <div style="margin-top: 15px;">
+      <%= link_to "＋ タスクを追加", new_routine_path, class: "btn-add-action" %>
+    </div>
+  </section>
 </div>
