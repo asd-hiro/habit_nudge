@@ -81,7 +81,6 @@ https://habit-nudge.onrender.com
 ### characters テーブル
 | Column          | Type     | Options                        |
 | :-------------- | :------- | :----------------------------- |
-| name            | string   | null: false                    |
 | level           | integer  | null: false, default: 1        |
 | exp             | integer  | null: false, default: 0        |
 | last_penalty_at | datetime | 重複実行防止用                 |
