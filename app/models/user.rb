@@ -4,8 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :name, presence: true
-  validates :character_name, presence: true
+  validates :name, presence: true, length: { maximum: 50 }
+  validates :character_name, presence: true, length: { maximum: 50 }
 
   has_one :character, dependent: :destroy
   has_many :routines, dependent: :destroy
@@ -17,7 +17,6 @@ class User < ApplicationRecord
   def create_default_character
     # character_name カラムの値を使用してキャラクターを作成
     create_character!(
-      name: character_name,
       level: 1,
       exp: 0,
       condition: 0
